@@ -59,6 +59,7 @@ Indicator {
                 elevation: 1
             }
 
+            //Search bar
             RowLayout {
                 anchors {
                     left: parent.left
@@ -89,6 +90,7 @@ Indicator {
             }
         }
 
+        //No apps found
         Column {
             anchors.centerIn: listView
             visible: listView.visible && listView.contentHeight == 0
@@ -111,6 +113,7 @@ Indicator {
             }
         }
 
+        //Search Results
         ListView {
             id: listView
 
@@ -145,6 +148,16 @@ Indicator {
                     AppLauncherModel.launchApplication(edit.appId)
                     desktop.overlayLayer.currentOverlay.close()
                 }
+
+                focus: true
+
+                Keys.onPressed: {
+                    if (event.key == Qt.Key_Enter) {
+                        AppLauncherModel.launchApplication(edit.appId)
+                        desktop.overlayLayer.currentOverlay.close()
+                        event.accepted = true;
+                    }
+                }
             }
         }
 
@@ -152,6 +165,7 @@ Indicator {
             flickableItem: listView
         }
 
+        //All apps pages
         ListView {
             id: gridView
 
@@ -175,12 +189,14 @@ Indicator {
             highlightMoveDuration: 500
             currentIndex: 0
 
+            //Pages
             model: Math.ceil(DesktopFiles.desktopFiles.rowCount()/pageCount)
             delegate: Grid {
                 id: page
 
                 property int pageIndex: index
 
+                //Each app
                 Repeater {
                     model: pageIndex == gridView.count - 1
                             ? DesktopFiles.desktopFiles.rowCount() % gridView.pageCount : gridView.pageCount
@@ -229,6 +245,7 @@ Indicator {
                 }
             }
 
+            //Scrolling capabilities
             MouseArea {
                 anchors.fill: parent
                 propagateComposedEvents: true
@@ -245,6 +262,7 @@ Indicator {
             Component.onCompleted: print("COUNT:", model)
         }
 
+        //Tab selectors
         Row {
             anchors {
                 horizontalCenter: parent.horizontalCenter
